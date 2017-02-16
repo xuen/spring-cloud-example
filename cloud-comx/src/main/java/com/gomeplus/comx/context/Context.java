@@ -13,6 +13,7 @@ import java.util.HashMap;
 
 /**
  * Created by xue on 12/16/16.
+ * TODO localCache 处理成特殊的类
  */
 public class Context {
     private Schema                  schema;
@@ -21,11 +22,11 @@ public class Context {
     private ResponseMessage         response;
     private ComxLogger              logger;
     private ContextCache            cache;
-    // TODO 处理成特殊的类
     private HashMap<String, Object> localCache = new HashMap<>();
     private Boolean                 localCacheEnabled = false;
 
     private String          traceId;
+
     // TODO
     // 记录各资源请求
     // 似乎可以是个结构体来记录

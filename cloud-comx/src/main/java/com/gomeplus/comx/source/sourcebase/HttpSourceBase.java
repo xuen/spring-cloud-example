@@ -1,6 +1,7 @@
 package com.gomeplus.comx.source.sourcebase;
 
 import com.gomeplus.comx.context.Context;
+import com.gomeplus.comx.source.SourceException;
 import com.gomeplus.comx.utils.config.Config;
 import com.gomeplus.comx.utils.config.ConfigException;
 import com.gomeplus.comx.utils.rest.RequestMessage;
@@ -15,7 +16,7 @@ public class HttpSourceBase extends AbstractRequestBasedSourceBase{
 
     public HttpSourceBase(Config conf){super(conf);}
 
-    protected Object doRequest(RequestMessage request, Context context) throws IOException{
+    protected Object doRequest(RequestMessage request, Context context) throws SourceException{
         // TODO 处理请求前数据
         // 处理 traceId
         // 处理 X-Forwarded-For

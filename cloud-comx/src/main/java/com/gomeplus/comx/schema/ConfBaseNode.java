@@ -7,10 +7,12 @@ import com.gomeplus.comx.utils.config.Config;
  */
 public class ConfBaseNode {
     protected Config conf;
-    protected Config parentNode;
 
     public ConfBaseNode(Config conf) {
         this.conf = conf;
+    }
+    public String getComxId() {
+        return conf.str("_comxid", "");
     }
     public Config getConf() {
         return conf;

@@ -81,7 +81,6 @@ public class ReservedParameterManager {
         return reservedQueryParams;
     }
 
-    // TODO 初始化之时直接将query和header中的冲突参数merge，以query为主
     public HashMap<String, String> getFilteredReservedHeaders(Context context) {
         HashMap<String, String> result = new HashMap<>();
         for (String queryName: reservedHeaderParams.keySet()) {
@@ -97,7 +96,6 @@ public class ReservedParameterManager {
 
 
 
-    //TODO
     public String getUserId() {
         String headerKey = "X-Gomeplus-User-Id";
         String queryKey  = "userId";

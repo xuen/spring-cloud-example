@@ -69,7 +69,7 @@ public class SpringCloudSourceBase extends AbstractRequestBasedSourceBase{
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
             return new JSONObject((Map) responseEntity.getBody());
         } else {
-            throw new SourceBizException("Source get source url:" + aURI.toString() + ", status code:" + responseEntity.getStatusCode());
+            throw new SourceBizException(responseEntity.getBody().toString(), Integer.parseInt(responseEntity.getStatusCode().toString()));
         }
         //return restTemplate.exchange(requestMessage.getUrl().getaURI(), HttpMethod.GET, entity, Object.class).getBody();
     }

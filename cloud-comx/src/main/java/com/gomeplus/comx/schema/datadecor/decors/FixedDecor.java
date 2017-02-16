@@ -21,20 +21,16 @@ public class FixedDecor extends AbstractDecor {
         super(conf);
     }
 
+    // TODO 确认 loaded 是否 一定是 json, 是否可以是 literal value
     public void doDecorate(Object data, Context context) throws ConfigException{
-        JSONObject loaded;
         String field        = conf.str (FIELD_FIELD, "");
-        if (field.isEmpty()) {
-            loaded   = conf.rsub(FIELD_FIXED_DATA).rawData();
-        } else {
-            loaded   = new JSONObject();
-            loaded.put(field, conf.rsub(FIELD_FIXED_DATA).rawData());
-        }
+
+        JSONObject loaded = field.isEmpty()? conf.rsub(FIELD_FIXED_DATA).rawData(): new JSONObject() {{ put(field, conf.rsub(FIELD_FIXED_DATA).rawData()); }};
 
         if (data instanceof Map) {
             for (String key: loaded.keySet()) {
                 Object value = loaded.get(key);
-                context.getLogger().error("FixedDecor: merge key :" + key + " value:" + value);
+                context.getLogger().info("FixedDecor: merge key :" + key + " value:" + value);
                 ((Map)data).put(key, loaded.get(key));
             }
         } else {

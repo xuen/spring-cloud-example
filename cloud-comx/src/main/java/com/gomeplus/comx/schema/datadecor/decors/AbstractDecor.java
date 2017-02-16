@@ -41,9 +41,11 @@ public abstract class AbstractDecor extends ConfBaseNode{
     public static final String TYPE_EACH           = "Each";
     public static final String TYPE_SCRIPT         = "Script";
 
+
     public AbstractDecor(Config conf){
         super(conf);
     }
+
     abstract public void doDecorate(Object data, Context context) throws ConfigException, SourceException, DecorException;
     abstract public String getType();
 
@@ -51,23 +53,22 @@ public abstract class AbstractDecor extends ConfBaseNode{
 
     /**
      * 抛出3类错误 1, ConfigException 2, SourceException 3, DecorException
+     * localcache default: disabled
      * @param data
      * @param context
      * @throws ConfigException
      * @throws SourceException
+     * @throws DecorException
      */
     public void decorate(Object data, Context context) throws ConfigException, SourceException, DecorException {
-        // localcache default: disabled
         context.setLocalCacheEnabled(conf.bool(FIELD_LOCAL_CACHE_ENABLED, false));
-
-        // TODO 记录更多decor conf 信息
-        context.getLogger().debug("Execute Decor:"+ this.getType());
+        context.getLogger().debug("Execute Decor:" + this.getType() +  " " + getComxId());
         try {
             // TODO before decorate : precondition node
-
-            DecorCache decorCache = DecorCache.fromConf(conf.sub(AbstractDecor.FIELD_CACHE), context, data);
+            // DecorCache decorCache = DecorCache.fromConf(conf.sub(AbstractDecor.FIELD_CACHE), context, data);
             // TODO 处理 decorCache withChildren & withOutChildren
 
+            if (!executePrecondition(data, context)) return;
             this.doDecorate(data, context);
             // TODO decorCache set before children;
             this.executeChildDecors(data, context);
@@ -80,8 +81,16 @@ public abstract class AbstractDecor extends ConfBaseNode{
     }
 
 
-    // precondition node; 是否在beforeDecorate 考虑
-    public void beforeDecorate(Object data, Context context){
+    /**
+     * precondition 默认返回是true; true 时执行
+     * @param data
+     * @param context
+     * @return
+     */
+    public boolean executePrecondition(Object data, Context context){
+        String precondition = conf.str(FIELD_PRECONDITION, "");
+        if (precondition.isEmpty()) return true;
+        return Precondition.execute(precondition, data, context);
     }
 
 
@@ -95,6 +104,9 @@ public abstract class AbstractDecor extends ConfBaseNode{
     public void executeChildDecors(Object data, Context context) throws ConfigException, SourceException, DecorException{
         this.sequentialExecuteChildDecors(data, context);
     }
+
+
+
     public void sequentialExecuteChildDecors(Object data, Context context) throws ConfigException, SourceException, DecorException{
         Config children = conf.sub(AbstractDecor.FIELD_DECORS);
         Set<String> keys = children.keys();

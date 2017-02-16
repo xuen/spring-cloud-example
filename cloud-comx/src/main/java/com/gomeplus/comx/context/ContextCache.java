@@ -25,6 +25,7 @@ public class ContextCache {
         JSONObject jsonObject = new JSONObject(value);
         return cache.set(key, jsonObject.toJSONString(), time);
     }
+
     public Object getMapObject(String key) {
         //System.out.println("get "+ key);
         if (refreshingEnabled) return null;
@@ -48,7 +49,6 @@ public class ContextCache {
         return cache.set(key, value);
     }
     public String get(String key) {
-        if (refreshingEnabled) return null;
-        return cache.get(key);
+        return refreshingEnabled? null:cache.get(key);
     }
 }
